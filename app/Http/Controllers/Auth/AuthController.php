@@ -24,7 +24,7 @@ class AuthController extends Controller
     public function login(AuthRequest $request)
     {
         //dd("ok");
-        if($user = Auth::attempt([
+        if(Auth::attempt([
             'username' => $request->input('username'),
             'password' => $request->input('password')]))
         {
@@ -42,6 +42,7 @@ class AuthController extends Controller
                     'username' => $user->username,
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,
+                    'isAdmin' => $user->isAdmin()
                 ],
             ], 200);
         }
@@ -53,7 +54,7 @@ class AuthController extends Controller
         ], 404);
     }
 
-    public function register(RegisterRequest $request)
+    public function register(AuthRequest $request)
     {
         //dd("ok");
         $user = new User();
@@ -91,6 +92,18 @@ class AuthController extends Controller
         ], 500);
 
     }
+
+    public function logout(Request $request)
+    {
+        // dd($request->user('api')->token());
+        $request->user('api')->token()->revoke();
+        return response()->json([
+            'state' => true,
+            'message' => 'you have successfully logged out.',
+            'data' => null,
+        ], 200);
+    }
+
 
     public function verifyEmail(Request $request, User $user, $timestamp)
     {

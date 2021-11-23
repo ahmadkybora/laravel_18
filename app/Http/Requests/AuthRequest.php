@@ -34,7 +34,16 @@ class AuthRequest extends FormRequest
                 
                 if(Route::currentRouteName() == 'register')
                     return [
-                        //
+                        'first_name' => ['bail', 'required', 'string', 'min:3', 'max:25'],
+                        'last_name' => ['bail', 'required', 'string', 'min:3', 'max:25'],
+                        'username' => ['bail', 'required', 'string', 'unique:users', 'min:3', 'max:25'],
+                        'email' => ['bail', 'required', 'email', 'unique:users'],
+                        'password' => ['bail', 'string', 'confirmed', 'min:8', 'max:25'],
+                        'mobile' => ['bail', 'string', 'required', 'unique:users', 'digits:11'],
+                        'home_phone' => ['bail', 'string', 'required', 'digits:15'],
+                        'work_phone' => ['bail', 'string', 'required', 'digits:15'],
+                        'work_address' => ['bail', 'string', 'required', 'min:5', 'max:300'],
+                        'home_address' => ['bail', 'string', 'required', 'min:5', 'max:300'],
                     ];
             break;
         }
