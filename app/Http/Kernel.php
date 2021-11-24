@@ -4,6 +4,7 @@ namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use App\Http\Middleware\Cors;
+use App\Http\Middleware\IsAdmin;
 
 class Kernel extends HttpKernel
 {
@@ -67,6 +68,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         'cors' => Cors::class,
+        'isAdmin' => IsAdmin::class,
         'profile' => \App\Http\Middleware\Profile::class,
     ];
 }

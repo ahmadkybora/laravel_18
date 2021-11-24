@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Panel;
 
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,13 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::with('category')->latest()->paginate(10);
+        if($products)
+        return response()->json([
+            'state' => true,
+            'message' => 'Success!',
+            'data' => $products
+        ]);
     }
 
     /**
