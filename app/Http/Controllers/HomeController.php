@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class HomeController extends Controller
 
     public function products()
     {
-        $products = Product::with(['category'])->latest()->paginate(6);
+        $products = Product::with(['category'])->latest()->paginate(8);
         if($products)
             return response()->json([
                 'state' => true,
@@ -41,12 +42,23 @@ class HomeController extends Controller
 
     public function categories()
     {
-        $categories = ProductCategory::latest()->paginate(6);
+        $categories = ProductCategory::with('brand')->latest()->paginate(8);
         if($categories)
             return response()->json([
                 'state' => true,
                 'message' => 'success',
                 'data' => $categories
+            ]);
+    }
+
+    public function brands()
+    {
+        $brands = Brand::latest()->paginate(6);
+        if($brands)
+            return response()->json([
+                'state' => true,
+                'message' => 'success',
+                'data' => $brands
             ]);
     }
 }

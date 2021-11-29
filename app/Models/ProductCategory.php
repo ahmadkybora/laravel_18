@@ -18,7 +18,7 @@ class ProductCategory extends Model
     ];
 
     public function brand(){
-        return $this->belongsTo(Brand::class);
+        return $this->belongsTo(Brand::class, 'id');
     }
 
     public function products(){

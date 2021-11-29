@@ -4,8 +4,9 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Panel\UserController;
 use App\Http\Controllers\Panel\ProductController;
+use App\Http\Controllers\Panel\ProductCategoryController;
 use App\Http\Controllers\Profile\CartController;
-use App\Http\Controllers\Profile\DashboardController;
+use App\Http\Controllers\Panel\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,12 +26,15 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::middleware(['cors'])->group(function () {
-    Route::middleware('auth:api')->group(function () {
+    // Route::middleware('auth:api')->group(function () {
         Route::get('/logout', [AuthController::class, 'logout']);
         // Private Routes
         // panel routes
-        Route::middleware(['isAdmin'])->group(function() {
+        // Route::middleware(['isAdmin'])->group(function() {
             Route::namespace('Panel')->prefix('panel')->group(function () {
+                Route::prefix('dashboard')->group(function() {
+                    Route::get('/', [DashboardController::class, 'index']);
+                });
                 Route::prefix('users')->group(function () {
                     // Route::resource('users', UserController::class);
                     Route::get('/{id}', [UserController::class, 'show']);
@@ -47,8 +51,15 @@ Route::middleware(['cors'])->group(function () {
                     Route::patch('/{product}', [ProductController::class, 'update']);
                     Route::delete('/{product}', [ProductController::class, 'destroy']);
                 });
+                Route::prefix('categories')->group(function () {
+                    Route::get('/{id}', [ProductCategoryController::class, 'show']);
+                    Route::get('/', [ProductCategoryController::class, 'index']);
+                    Route::post('/', [ProductCategoryController::class, 'store']);
+                    Route::patch('/{category}', [ProductCategoryController::class, 'update']);
+                    Route::delete('/{category}', [ProductCategoryController::class, 'destroy']);
+                });
             });
-        });
+        // });
         // profile routes
         Route::middleware('profile')->group(function() {
             Route::namespace('Profile')->prefix('profile')->middleware('verified')->group(function() {
@@ -59,7 +70,7 @@ Route::middleware(['cors'])->group(function () {
             });
         });
     });
-});
+// });
 // Public Routes
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
@@ -67,3 +78,4 @@ Route::get('/verify-email/{user:username}/{timestamp}', [AuthController::class, 
 
 Route::get('/products', [HomeController::class, 'products']);
 Route::get('/categories', [HomeController::class, 'categories']);
+Route::get('/brands', [HomeController::class, 'brands']);
